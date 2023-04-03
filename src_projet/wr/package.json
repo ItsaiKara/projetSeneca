@@ -1,0 +1,20 @@
+{
+  "name": "wr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "code": "^5.2.4",
+    "expect": "^29.5.0",
+    "lab": "^18.0.2",
+    "restify": "^11.1.0",
+    "restify-clients": "^4.2.0",
+    "seneca": "^3.30.0"
+  }
+}
