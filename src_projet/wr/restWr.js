@@ -5,17 +5,27 @@ const seneca = Seneca()
 const BodyParser = require('body-parser')
 
 var Routes = [{
+  pin: 'role:stats,cmd:getWrStats', // type de message créé à la réception d'une requête HTTP
+  prefix: '/api/wr',
+  map: {
+    getWrStats: { GET: true, name: "", suffix: "/stats/:applicant?" }
+  }
+},{
   pin: 'role:wr,cmd:*', // type de message créé à la réception d'une requête HTTP
   prefix : '/api',
   map: {
     create : {POST : true , name :"", suffix : "/wr"},
     getById: {GET: true, name: "", suffix: "/wr/:id?"},
     updateWr: {PUT: true, name: "", suffix: "/wr/:id?"},
-    deleteWr : {DELETE: true, name: "", suffix: "/wr/:id"}
+    deleteWr : {DELETE: true, name: "", suffix: "/wr/:id"},
+    getWrStatss: { GET: true, name: '', suffix: 'wr/stats/:applicant?'}
   }
-}]
+}
+]
+
 
 seneca.client({port: 4000, pin: 'role:wr'})
+seneca.client({port: 4001, pin: 'role:stats'})
 
 seneca.use(SenecaWeb, {
   options: { parseBody: false }, // désactive l'analyseur JSON de Seneca

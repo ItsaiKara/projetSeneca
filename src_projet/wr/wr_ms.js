@@ -3,6 +3,15 @@ const SenecaWeb = require('seneca-web')
 
 var wrs = [] // liste des work requests
 
+var global_stats_wr_created = 0
+var global_stats_wr_closed = 0
+var global_stats_wr_opened = 0
+
+//a function to return the three stats above in another file
+function getWrStats() {
+    return {created: global_stats_wr_created, closed: global_stats_wr_closed, opened: global_stats_wr_opened}
+}
+
 // build current date
 function currentDate() {
     let today = new Date();
@@ -18,23 +27,26 @@ function currentDate() {
 // definition d'un plugin (constituant ici le microservice)
 var plugWr = function (options) {
     var seneca = this
+    seneca.add('role:wr,cmd:getWrStatss', async (msg, respond) => {
+        const data = {
+            global_stats_wr_closed : global_stats_wr_closed,
+            global_stats_wr_created : global_stats_wr_created,
+            global_stats_wr_opened : global_stats_wr_opened
+        }
+        await respond(null, data)
+      })
     seneca.add('role:wr,cmd:create', async function (msg, done) {
         if (msg.args.body.applicant == undefined || msg.args.body.dc_date == undefined) {
             await done(null, result = {success: false, msg : `missing data`})
         }
-        // console.log(msg)
         let tmpWr = {id: wrs.length+1, applicant : msg.args.body.applicant, work : msg.args.body.work, dc_date : msg.args.body.dc_date, state: "created", compl_date: null} // initialiser à null au lieu de ne pas initialiser}
-        // tmpWr = {id: 1, applicant: "paul", work: "PC update", dc_date: "05/06/2021"}
         wrs.push(tmpWr)
-        //print size
-        // console.log("lengh : " + wrs.length)
-        // console.log(wrs)
+        global_stats_wr_created++
+        global_stats_wr_opened++
         await done(null, result = {success: true, data : [tmpWr]})
     })
     seneca.add('role:wr,cmd:getById', async function (msg, done) {
-        // console.log(msg.args.params)
         let l_id = msg.args.params.id
-        // console.log(l_id)
         if (l_id) {
             //recherche de l'objet wr correspondant à l'id
             for (let i = 0; i < wrs.length; i++) {
@@ -48,7 +60,6 @@ var plugWr = function (options) {
         }
     })
     seneca.add('role:wr,cmd:updateWr', async function (msg, done) {
-        // console.log(msg.args)
         let l_id = msg.args.params.id
         if (l_id) {
             //recherche de l'objet wr correspondant à l'id
@@ -61,6 +72,8 @@ var plugWr = function (options) {
                     if (msg.args.body.hasOwnProperty('state')) {
                         wrs[i].state = msg.args.body.state
                         wrs[i].compl_date = currentDate()
+                        global_stats_wr_closed++
+                        global_stats_wr_opened--
                         return await done(null, result = {success: true, data : [wrs[i]]})
                     }
                     return await done(null, result = {success: false, data : [wrs[i]], msg : "wr is already closed"})
@@ -72,10 +85,7 @@ var plugWr = function (options) {
         }
     })
     seneca.add('role:wr,cmd:deleteWr', async function (msg, done) { 
-        // console.log(msg.args)
         let l_id = msg.args.params.id
-        console.log(l_id)
-        console.log(wrs)
         if (l_id) {
             //recherche de l'objet wr correspondant à l'id
             for (let i = 0; i < wrs.length; i++) {
@@ -86,6 +96,7 @@ var plugWr = function (options) {
                     }
                     el = wrs[i]
                     wrs.splice(i, 1)
+                    global_stats_wr_opened--
                     return await done(null, result = {success: true, data : [el]})
                 }
             }
@@ -94,6 +105,8 @@ var plugWr = function (options) {
             return await done(new Error(`ID is required`));
         }
     })
+    
+      
     return {name : 'wr'} // nom du plugin
 
 }
