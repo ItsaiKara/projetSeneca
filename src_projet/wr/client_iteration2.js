@@ -154,48 +154,48 @@ lab.experiment('work request app', () => {
         expect([paulWR, pierreWR]).to.include(result.data);
     });
 
-    // // 9
-    // lab.test('delete an opened wr', async () => {
-    //     const result = await makePromiseRequest(client.del, '/api/wr/' + pierreWR.id);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data[0]).to.be.equals(pierreWR);
-    // });
+    // 9
+    lab.test('delete an opened wr', async () => {
+        const result = await makePromiseRequest(client.del, '/api/wr/' + pierreWR.id);
+        expect(result.success).to.be.true();
+        expect(result.data[0]).to.be.equals(pierreWR);
+    });
 
-    // // 10
-    // lab.test('attempt to update a dummy wr', async () => {
-    //     const result = await makePromiseRequest(client.put, '/api/wr/_______', {});
-    //     expect(result.success).to.be.false();
-    //     expect(result.msg).to.be.equals('wr not found');
-    // });
+    // 10
+    lab.test('attempt to update a dummy wr', async () => {
+        const result = await makePromiseRequest(client.put, '/api/wr/_______', {});
+        expect(result.success).to.be.false();
+        expect(result.msg).to.be.equals('wr not found');
+    });
 
-    // // 11
-    // lab.test('attempt to update a wr w/o id', async () => {
-    //     const result = await makePromiseRequest(client.put, '/api/wr', {});
-    //     expect(result.success).to.be.false();
-    //     expect(result.msg).to.be.equals('wr id not provided');
-    // });
+    // 11
+    lab.test('attempt to update a wr w/o id', async () => {
+        const result = await makePromiseRequest(client.put, '/api/wr', {});
+        expect(result.success).to.be.false();
+        expect(result.msg).to.be.equals('wr id not provided');
+    });
 
-    // // 12
-    // lab.test('attempt to delete a dummy wr', async () => {
-    //     const result = await makePromiseRequest(client.del, '/api/wr/_______');
-    //     expect(result.success).to.be.false();
-    //     expect(result.msg).to.be.equals('wr not found');
-    // });
+    // 12
+    lab.test('attempt to delete a dummy wr', async () => {
+        const result = await makePromiseRequest(client.del, '/api/wr/_______');
+        expect(result.success).to.be.false();
+        expect(result.msg).to.be.equals('wr not found');
+    });
 
-    // // 13
-    // lab.test('create a (bad) wr for henry', async () => {
-    //     const result = await makePromiseRequest(client.post, '/api/wr', henriWR);
-    //     expect(result).to.not.be.null();
-    //     // dc_date is missing and this should trigger an error
-    //     expect(result.success).to.be.false();
-    // });
+    // 13
+    lab.test('create a (bad) wr for henry', async () => {
+        const result = await makePromiseRequest(client.post, '/api/wr', henriWR);
+        expect(result).to.not.be.null();
+        // dc_date is missing and this should trigger an error
+        expect(result.success).to.be.false();
+    });
 
-    // // 14
-    // lab.test('create a (bad) wr for jacques', async () => {
-    //     const result = await makePromiseRequest(client.post, '/api/wr', jacquesWR);
-    //     expect(result).to.not.be.null();
-    //     // applicant is missing and this should trigger an error
-    //     expect(result.success).to.be.false();
-    // });
+    // 14
+    lab.test('create a (bad) wr for jacques', async () => {
+        const result = await makePromiseRequest(client.post, '/api/wr', jacquesWR);
+        expect(result).to.not.be.null();
+        // applicant is missing and this should trigger an error
+        expect(result.success).to.be.false();
+    });
 });
 
