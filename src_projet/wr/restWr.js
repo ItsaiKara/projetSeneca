@@ -9,8 +9,9 @@ var Routes = [{
   prefix : '/api',
   map: {
     create : {POST : true , name :"", suffix : "/wr"},
-    getById: {GET: true, name: "", suffix: "/wr/:id"},
-    updateWr: {PUT: true, name: "", suffix: "/wr/:id"}
+    getById: {GET: true, name: "", suffix: "/wr/:id?"},
+    updateWr: {PUT: true, name: "", suffix: "/wr/:id"},
+    deleteWr : {DELETE: true, name: "", suffix: "/wr/:id"}
   }
 }]
 

@@ -128,31 +128,31 @@ lab.experiment('work request app', () => {
         expect(result.msg).to.be.equals('wr is already closed');
     });
 
-    // // 6
-    // lab.test('attempt to delete a closed wr', async () => {
-    //     const result = await makePromiseRequest(client.del, '/api/wr/' + paulWR.id);
-    //     expect(result.success).to.be.false();
-    //     expect(result.msg).to.be.equals('wr is already closed');
-    // });
+    // 6
+    lab.test('attempt to delete a closed wr', async () => {
+        const result = await makePromiseRequest(client.del, '/api/wr/' + paulWR.id);
+        expect(result.success).to.be.false();
+        expect(result.msg).to.be.equals('wr is already closed');
+    });
 
-    // // 7
-    // lab.test('create a wr for pierre', async () => {
-    //     const result = await makePromiseRequest(client.post, '/api/wr', pierreWR);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data[0]).to.include(pierreWR);
-    //     // completion date doesn't exist because wr isn't closed
-    //     expect(result.data[0].compl_date).to.not.exist();
-    //     pierreWR = result.data[0];
-    // });
+    // 7
+    lab.test('create a wr for pierre', async () => {
+        const result = await makePromiseRequest(client.post, '/api/wr', pierreWR);
+        expect(result.success).to.be.true();
+        expect(result.data[0]).to.include(pierreWR);
+        // completion date doesn't exist because wr isn't closed
+        expect(result.data[0].compl_date).to.not.exist();
+        pierreWR = result.data[0];
+    });
 
-    // // 8
-    // lab.test('get all WR (w/o id)', async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr');
-    //     expect(result.success).to.be.true();
-    //     // tests inclusion in both directions to determine equality
-    //     expect(result.data).to.include([paulWR, pierreWR]);
-    //     expect([paulWR, pierreWR]).to.include(result.data);
-    // });
+    // 8
+    lab.test('get all WR (w/o id)', async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr');
+        expect(result.success).to.be.true();
+        // tests inclusion in both directions to determine equality
+        expect(result.data).to.include([paulWR, pierreWR]);
+        expect([paulWR, pierreWR]).to.include(result.data);
+    });
 
     // // 9
     // lab.test('delete an opened wr', async () => {
