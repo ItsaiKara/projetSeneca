@@ -11,11 +11,20 @@ var Routes = [{
     create : {POST : true , name :"", suffix : "/wr"},
     getById: {GET: true, name: "", suffix: "/wr/:id?"},
     updateWr: {PUT: true, name: "", suffix: "/wr/:id?"},
-    deleteWr : {DELETE: true, name: "", suffix: "/wr/:id"}
+    deleteWr : {DELETE: true, name: "", suffix: "/wr/:id"},
+    stats: {GET: true, name: "", suffix: "/wr/stats"}
+  }
+},
+{
+  pin: 'role:stat,cmd:*', // type de message créé à la réception d'une requête HTTP
+  prefix : '/api',
+  map: {
+    stats: {GET: true, name: "", suffix: "/wr/stats/:applicant?"}
   }
 }]
 
 seneca.client({port: 4000, pin: 'role:wr'})
+seneca.client({port: 4001, pin: 'role:stat'})
 
 seneca.use(SenecaWeb, {
   options: { parseBody: false }, // désactive l'analyseur JSON de Seneca
