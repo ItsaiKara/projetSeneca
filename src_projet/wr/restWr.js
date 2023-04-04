@@ -9,19 +9,12 @@ var Routes = [{
   prefix : '/api',
   map: {
     create : {POST : true , name :"", suffix : "/wr"},
-    getById: {GET: true, name: "", suffix: "/wr/:id"}
+    getById: {GET: true, name: "", suffix: "/wr/:id"},
+    updateWr: {PUT: true, name: "", suffix: "/wr/:id"}
   }
 }]
 
-seneca.add('role:wr,cmd:create', function (msg, respond) {
-  this.act('role:wr,cmd:wr', {data: msg.request$.body}, respond);
-});
-
-seneca.add('role:wr,cmd:getById', function (msg, respond) {
-  this.act('role:wr,cmd:getById', {id: msg.args.params.id}, respond);
-});
-
-seneca.client({port: 3000, pin: 'role:wr'})
+seneca.client({port: 4000, pin: 'role:wr'})
 
 seneca.use(SenecaWeb, {
   options: { parseBody: false }, // désactive l'analyseur JSON de Seneca

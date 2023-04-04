@@ -81,42 +81,45 @@ lab.experiment('work request app', () => {
         expect(result.success).to.be.true();
         // for creation (post) we use 'include' because fields are added
         expect(result.data[0]).to.include(paulWR);
-        console.log(result);
+        // console.log(result);
         expect(result.data[0].id).to.not.be.undefined();
         expect(result.data[0].state).to.be.equals('created');
         // completion date doesn't exist because wr isn't closed
         expect(result.data[0].compl_date).to.not.exist();
         paulWR = result.data[0]; // for next tests...
+        // console.log(paulWR)
     });
-
+    
     // 2
     lab.test('get w/ id', async () => {
+        // console.log(paulWR.id)
         const result = await makePromiseRequest(client.get, '/api/wr/' + paulWR.id);
+        // console.log(result)
         expect(result.success).to.be.true();
         expect(result.data[0]).to.be.equals(paulWR);
         // completion date doesn't exist because wr isn't closed
         expect(result.data[0].compl_date).to.not.exist();
     });
 
-    // // 3
-    // lab.test('update work item', async () => {
-    //     let newWorkItem = 'PC reinstall';
-    //     const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"work": newWorkItem});
-    //     expect(result.success).to.be.true();
-    //     paulWR.work = newWorkItem;
-    //     expect(result.data[0]).to.be.equals(paulWR);
-    //     // completion date doesn't exist because wr isn't closed
-    //     expect(result.data[0].compl_date).to.not.exist();
-    // });
+    // 3
+    lab.test('update work item', async () => {
+        let newWorkItem = 'PC reinstall';
+        const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"work": newWorkItem});
+        expect(result.success).to.be.true();
+        paulWR.work = newWorkItem;
+        expect(result.data[0]).to.be.equals(paulWR);
+        // completion date doesn't exist because wr isn't closed
+        expect(result.data[0].compl_date).to.not.exist();
+    });
 
-    // // 4
-    // lab.test('update state (closing)', async () => {
-    //     const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"state": "closed"});
-    //     expect(result.success).to.be.true();
-    //     paulWR.state = 'closed';
-    //     paulWR.compl_date = currentDate();
-    //     expect(result.data[0]).to.be.equals(paulWR);
-    // });
+    // 4
+    lab.test('update state (closing)', async () => {
+        const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"state": "closed"});
+        expect(result.success).to.be.true();
+        paulWR.state = 'closed';
+        paulWR.compl_date = currentDate();
+        expect(result.data[0]).to.be.equals(paulWR);
+    });
 
     // // 5
     // lab.test('attempt to update a closed wr', async () => {
