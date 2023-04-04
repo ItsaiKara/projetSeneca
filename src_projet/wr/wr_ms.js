@@ -47,14 +47,16 @@ var plugWr = function (options) {
             //recherche de l'objet wr correspondant à l'id
             for (let i = 0; i < wrs.length; i++) {
                 if (wrs[i].id == l_id) {
-                    if (msg.args.body.hasOwnProperty('work')) {
+                    if (msg.args.body.hasOwnProperty('work') && wrs[i].state != "closed") {
                         wrs[i].work = msg.args.body.work
+                        await done(null, result = {success: true, data : [wrs[i]]})
                     } 
                     if (msg.args.body.hasOwnProperty('state')) {
                         wrs[i].state = msg.args.body.state
                         wrs[i].compl_date = currentDate()
+                        await done(null, result = {success: true, data : [wrs[i]]})
                     }
-                    await done(null, result = {success: true, data : [wrs[i]]})
+                    await done(null, result = {success: false, data : [wrs[i]], msg : "wr is already closed"})
                 }
             }
             await done(null, result = {success: false, msg : `wr with id ${l_id} not found`})

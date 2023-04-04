@@ -121,12 +121,12 @@ lab.experiment('work request app', () => {
         expect(result.data[0]).to.be.equals(paulWR);
     });
 
-    // // 5
-    // lab.test('attempt to update a closed wr', async () => {
-    //     const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"work": "PC reinstall"});
-    //     expect(result.success).to.be.false();
-    //     expect(result.msg).to.be.equals('wr is already closed');
-    // });
+    //5
+    lab.test('attempt to update a closed wr', async () => {
+        const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"work": "PC reinstall"});
+        expect(result.success).to.be.false();
+        expect(result.msg).to.be.equals('wr is already closed');
+    });
 
     // // 6
     // lab.test('attempt to delete a closed wr', async () => {
