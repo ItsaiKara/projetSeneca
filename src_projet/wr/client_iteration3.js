@@ -102,7 +102,10 @@ lab.experiment('work request app', () => {
     // 3
     lab.test('get global stats', async () => {
         const result = await makePromiseRequest(client.get, '/api/wr/stats');
+<<<<<<< HEAD
         console.log(result);
+=======
+>>>>>>> 8ebb2fc2dccbb33070b77aa7b321e83f05bb7397
         expect(result.success).to.be.true();
         expect(result.data.global_stats_wr_created).to.be.equals(1);
         expect(result.data.global_stats_wr_opened).to.be.equals(1);
