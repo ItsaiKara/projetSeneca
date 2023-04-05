@@ -37,7 +37,7 @@ function getNbWrDeletedByApplicant(applicant) {
 
 // definition d'un plugin (constituant ici le microservice)
 var plugStatWr = function (options) {
-    var seneca = 
+    var seneca = this
 	/**
 	 * @role stats
 	 * @cmd getWrStats

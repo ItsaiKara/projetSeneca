@@ -231,7 +231,6 @@ var plugWr = function (options) {
                 global_stats_wr_opened--
                 saveWrsToJson(wrs)
                 saveStatsToJson(global_stats_wr_created, global_stats_wr_closed, global_stats_wr_opened)
-                console.log(wrs)
             }
         }
         return await done(null, result = {success: true, data : wrs})
