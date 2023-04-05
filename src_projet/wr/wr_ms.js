@@ -1,16 +1,88 @@
 const Seneca = require('seneca')
 const SenecaWeb = require('seneca-web')
+const fs = require('fs');
+const { application } = require('express');
 
-var wrs = [] // liste des work requests
+var wrs = [] // liste des work 
+var wrs_deleted_by_applicant = {} // liste des work requests deleted by applicant
 
 var global_stats_wr_created = 0
 var global_stats_wr_closed = 0
 var global_stats_wr_opened = 0
+var global_stats_wr_deleted = 0
 
-//a function to return the three stats above in another file
-function getWrStats() {
-    return {created: global_stats_wr_created, closed: global_stats_wr_closed, opened: global_stats_wr_opened}
+//flush all the files at startup
+function flushFiles() {
+    fs.writeFile('wrs.json', JSON.stringify({}), (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+    });
+    fs.writeFile('stats.json', JSON.stringify({}), (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+    });
+    fs.writeFile('stat_del.json', JSON.stringify({}), (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+    });
+    console.log('[INFO]. all files flushed')
 }
+
+flushFiles()
+
+//save number of wrs deleted by applicant to file
+function saveWrDeletedByApplicantToJson() {
+    fs.writeFile('stat_del.json', JSON.stringify(wrs_deleted_by_applicant), (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log('stat_del.json file has been saved successfully.');
+    });
+}
+
+function saveWrsToJson(wrs) { 
+    fs.writeFile('wrs.json', JSON.stringify(wrs), (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log('wrs.json file has been saved successfully.');
+    });
+}
+
+function readWrsFromFile() {
+  const rawData = fs.readFileSync('wrs.json');
+  const wrs = JSON.parse(rawData);
+  return wrs;
+}
+
+//function to save stats to file
+function saveStatsToJson(global_stats_wr_created, global_stats_wr_closed, global_stats_wr_opened) {
+    let stats = {global_stats_wr_created: global_stats_wr_created, global_stats_wr_closed: global_stats_wr_closed, global_stats_wr_opened: global_stats_wr_opened, global_stats_wr_deleted: global_stats_wr_deleted}
+    fs.writeFile('stats.json', JSON.stringify(stats), (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log('stats.json file has been saved successfully.');
+    });
+}
+
+//function to read stats from file
+function readStatsFromFile() {
+    const rawData = fs.readFileSync('stats.json');
+    const stats = JSON.parse(rawData);
+    return stats;
+}
+
+  
 
 // build current date
 function currentDate() {
@@ -27,14 +99,6 @@ function currentDate() {
 // definition d'un plugin (constituant ici le microservice)
 var plugWr = function (options) {
     var seneca = this
-    seneca.add('role:wr,cmd:getWrStatss', async (msg, respond) => {
-        const data = {
-            global_stats_wr_closed : global_stats_wr_closed,
-            global_stats_wr_created : global_stats_wr_created,
-            global_stats_wr_opened : global_stats_wr_opened
-        }
-        await respond(null, data)
-      })
     seneca.add('role:wr,cmd:create', async function (msg, done) {
         if (msg.args.body.applicant == undefined || msg.args.body.dc_date == undefined) {
             await done(null, result = {success: false, msg : `missing data`})
@@ -43,6 +107,9 @@ var plugWr = function (options) {
         wrs.push(tmpWr)
         global_stats_wr_created++
         global_stats_wr_opened++
+        // console.log(wrs)
+        saveWrsToJson(wrs)
+        saveStatsToJson(global_stats_wr_created, global_stats_wr_closed, global_stats_wr_opened)
         await done(null, result = {success: true, data : [tmpWr]})
     })
     seneca.add('role:wr,cmd:getById', async function (msg, done) {
@@ -67,6 +134,9 @@ var plugWr = function (options) {
                 if (wrs[i].id == l_id) {
                     if (msg.args.body.hasOwnProperty('work') && wrs[i].state != "closed") {
                         wrs[i].work = msg.args.body.work
+                        saveWrsToJson(wrs)
+                        saveStatsToJson(global_stats_wr_created, global_stats_wr_closed, global_stats_wr_opened)
+                        // console.log(wrs)
                         return await done(null, result = {success: true, data : [wrs[i]]})
                     } 
                     if (msg.args.body.hasOwnProperty('state')) {
@@ -74,6 +144,9 @@ var plugWr = function (options) {
                         wrs[i].compl_date = currentDate()
                         global_stats_wr_closed++
                         global_stats_wr_opened--
+                        saveWrsToJson(wrs)
+                        saveStatsToJson(global_stats_wr_created, global_stats_wr_closed, global_stats_wr_opened)
+                        // console.log(wrs)
                         return await done(null, result = {success: true, data : [wrs[i]]})
                     }
                     return await done(null, result = {success: false, data : [wrs[i]], msg : "wr is already closed"})
@@ -86,6 +159,7 @@ var plugWr = function (options) {
     })
     seneca.add('role:wr,cmd:deleteWr', async function (msg, done) { 
         let l_id = msg.args.params.id
+        console.log(l_id + "oui ")
         if (l_id) {
             //recherche de l'objet wr correspondant à l'id
             for (let i = 0; i < wrs.length; i++) {
@@ -94,21 +168,42 @@ var plugWr = function (options) {
                     if (wrs[i].state == "closed") {
                         return await done(null, result = {success: false, msg : `wr is already closed`})
                     }
+                    global_stats_wr_deleted++
+                    wrs_deleted_by_applicant[wrs[i].applicant] = wrs_deleted_by_applicant[wrs[i].applicant] ? wrs_deleted_by_applicant[wrs[i].applicant] + 1 : 1
+                    saveWrDeletedByApplicantToJson()
                     el = wrs[i]
                     wrs.splice(i, 1)
                     global_stats_wr_opened--
+                    saveWrsToJson(wrs)
+                    saveStatsToJson(global_stats_wr_created, global_stats_wr_closed, global_stats_wr_opened)
+                    // console.log(wrs)
                     return await done(null, result = {success: true, data : [el]})
                 }
             }
             return await done(null, result = {success: false, msg : `wr not found`})
         } else {
-            return await done(new Error(`ID is required`));
+            
         }
-    })
-    
-      
+    })  
+    seneca.add('role:wr,cmd:deleteAllWr', async function (msg, done) {
+        //drop all wr not closed
+        for (let i = 0; i < wrs.length; i++) {
+            if (wrs[i].state != "closed") {
+                //delete wr
+                global_stats_wr_deleted++
+                wrs_deleted_by_applicant[wrs[i].applicant] = wrs_deleted_by_applicant[wrs[i].applicant] ? wrs_deleted_by_applicant[wrs[i].applicant] + 1 : 1
+                saveWrDeletedByApplicantToJson()
+                el = wrs[i]
+                wrs.splice(i, 1)
+                global_stats_wr_opened--
+                saveWrsToJson(wrs)
+                saveStatsToJson(global_stats_wr_created, global_stats_wr_closed, global_stats_wr_opened)
+                console.log(wrs)
+            }
+        }
+        return await done(null, result = {success: true, data : wrs})
+    })    
     return {name : 'wr'} // nom du plugin
-
 }
 
 var seneca = Seneca()

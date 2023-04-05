@@ -102,296 +102,295 @@ lab.experiment('work request app', () => {
     // 3
     lab.test('get global stats', async () => {
         const result = await makePromiseRequest(client.get, '/api/wr/stats');
-<<<<<<< HEAD
-        console.log(result);
-=======
->>>>>>> 8ebb2fc2dccbb33070b77aa7b321e83f05bb7397
+        // console.log(result);
         expect(result.success).to.be.true();
         expect(result.data.global_stats_wr_created).to.be.equals(1);
         expect(result.data.global_stats_wr_opened).to.be.equals(1);
         expect(result.data.global_stats_wr_closed).to.be.equals(0);
     });
 
-    // // 4
-    // lab.test('get user stats for ' + paulWR.applicant, async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats/' + paulWR.applicant);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.applicant).to.be.equals(paulWR.applicant);
-    //     expect(result.data.stats_wr_created).to.be.equals(1);
-    //     expect(result.data.stats_wr_opened).to.be.equals(1);
-    //     expect(result.data.stats_wr_closed).to.be.equals(0);
-    // });
+    // 4
+    lab.test('get user stats for ' + paulWR.applicant, async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats/' + paulWR.applicant);
+        expect(result.success).to.be.true();
+        // console.log(result.data);
+        expect(result.data.applicant).to.be.equals(paulWR.applicant);
+        expect(result.data.stats_wr_created).to.be.equals(1);
+        expect(result.data.stats_wr_opened).to.be.equals(1);
+        expect(result.data.stats_wr_closed).to.be.equals(0);
+    });
 
-    // // 5
-    // lab.test('update work item', async () => {
-    //     let newWorkItem = 'PC reinstall';
-    //     const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"work": newWorkItem});
-    //     expect(result.success).to.be.true();
-    //     paulWR.work = newWorkItem;
-    //     expect(result.data[0]).to.be.equals(paulWR);
-    //     // completion date doesn't exist because wr isn't closed
-    //     expect(result.data[0].compl_date).to.not.exist();
-    // });
+    // 5
+    lab.test('update work item', async () => {
+        let newWorkItem = 'PC reinstall';
+        const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"work": newWorkItem});
+        expect(result.success).to.be.true();
+        paulWR.work = newWorkItem;
+        expect(result.data[0]).to.be.equals(paulWR);
+        // completion date doesn't exist because wr isn't closed
+        expect(result.data[0].compl_date).to.not.exist();
+    });
 
-    // // 6
-    // lab.test('update state (closing)', async () => {
-    //     const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"state": "closed"});
-    //     expect(result.success).to.be.true();
-    //     paulWR.state = 'closed';
-    //     paulWR.compl_date = currentDate();
-    //     expect(result.data[0]).to.be.equals(paulWR);
-    // });
+    // 6
+    lab.test('update state (closing)', async () => {
+        const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"state": "closed"});
+        expect(result.success).to.be.true();
+        paulWR.state = 'closed';
+        paulWR.compl_date = currentDate();
+        expect(result.data[0]).to.be.equals(paulWR);
+    });
 
-    // // 7
-    // lab.test('get global stats', async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats');
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.global_stats_wr_created).to.be.equals(1);
-    //     expect(result.data.global_stats_wr_opened).to.be.equals(0);
-    //     expect(result.data.global_stats_wr_closed).to.be.equals(1);
-    // });
+    // 7
+    lab.test('get global stats', async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats');
+        expect(result.success).to.be.true();
+        expect(result.data.global_stats_wr_created).to.be.equals(1);
+        expect(result.data.global_stats_wr_opened).to.be.equals(0);
+        expect(result.data.global_stats_wr_closed).to.be.equals(1);
+    });
 
-    // // 8
-    // lab.test('get user stats for ' + paulWR.applicant, async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats/' + paulWR.applicant);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.applicant).to.be.equals(paulWR.applicant);
-    //     expect(result.data.stats_wr_created).to.be.equals(1);
-    //     expect(result.data.stats_wr_opened).to.be.equals(0);
-    //     expect(result.data.stats_wr_closed).to.be.equals(1);
-    // });
+    // 8
+    lab.test('get user stats for ' + paulWR.applicant, async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats/' + paulWR.applicant);
+        expect(result.success).to.be.true();
+        expect(result.data.applicant).to.be.equals(paulWR.applicant);
+        expect(result.data.stats_wr_created).to.be.equals(1);
+        expect(result.data.stats_wr_opened).to.be.equals(0);
+        expect(result.data.stats_wr_closed).to.be.equals(1);
+    });
 
-    // // 9
-    // lab.test('attempt to update a closed wr', async () => {
-    //     const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"work": "PC reinstall"});
-    //     expect(result.success).to.be.false();
-    //     expect(result.msg).to.be.equals('wr is already closed');
-    // });
+    // 9
+    lab.test('attempt to update a closed wr', async () => {
+        const result = await makePromiseRequest(client.put, '/api/wr/' + paulWR.id, {"work": "PC reinstall"});
+        expect(result.success).to.be.false();
+        expect(result.msg).to.be.equals('wr is already closed');
+    });
 
-    // // 10
-    // lab.test('attempt to delete a closed wr', async () => {
-    //     const result = await makePromiseRequest(client.del, '/api/wr/' + paulWR.id);
-    //     expect(result.success).to.be.false();
-    //     expect(result.msg).to.be.equals('wr is already closed');
-    // });
+    // 10
+    lab.test('attempt to delete a closed wr', async () => {
+        const result = await makePromiseRequest(client.del, '/api/wr/' + paulWR.id);
+        expect(result.success).to.be.false();
+        expect(result.msg).to.be.equals('wr is already closed');
+    });
 
-    // // 11
-    // lab.test('create a wr from pierre', async () => {
-    //     const result = await makePromiseRequest(client.post, '/api/wr', pierreWR);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data[0]).to.include(pierreWR);
-    //     // completion date doesn't exist because wr isn't closed
-    //     expect(result.data[0].compl_date).to.not.exist();
-    //     pierreWR = result.data[0];
-    // });
+    // 11
+    lab.test('create a wr from pierre', async () => {
+        const result = await makePromiseRequest(client.post, '/api/wr', pierreWR);
+        expect(result.success).to.be.true();
+        expect(result.data[0]).to.include(pierreWR);
+        // completion date doesn't exist because wr isn't closed
+        expect(result.data[0].compl_date).to.not.exist();
+        pierreWR = result.data[0];
+    });
 
-    // // 12
-    // lab.test('get global stats', async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats');
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.global_stats_wr_created).to.be.equals(2);
-    //     expect(result.data.global_stats_wr_opened).to.be.equals(1);
-    //     expect(result.data.global_stats_wr_closed).to.be.equals(1);
-    // });
+    // 12
+    lab.test('get global stats', async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats');
+        expect(result.success).to.be.true();
+        expect(result.data.global_stats_wr_created).to.be.equals(2);
+        expect(result.data.global_stats_wr_opened).to.be.equals(1);
+        expect(result.data.global_stats_wr_closed).to.be.equals(1);
+    });
 
-    // // 13
-    // lab.test('get user stats for ' + pierreWR.applicant, async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats/' + pierreWR.applicant);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.applicant).to.be.equals(pierreWR.applicant);
-    //     expect(result.data.stats_wr_created).to.be.equals(1);
-    //     expect(result.data.stats_wr_opened).to.be.equals(1);
-    //     expect(result.data.stats_wr_closed).to.be.equals(0);
-    // });
+    // 13
+    lab.test('get user stats for ' + pierreWR.applicant, async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats/' + pierreWR.applicant);
+        expect(result.success).to.be.true();
+        expect(result.data.applicant).to.be.equals(pierreWR.applicant);
+        expect(result.data.stats_wr_created).to.be.equals(1);
+        expect(result.data.stats_wr_opened).to.be.equals(1);
+        expect(result.data.stats_wr_closed).to.be.equals(0);
+    });
 
-    // // 14
-    // lab.test('get all WR (w/o id)', async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr');
-    //     expect(result.success).to.be.true();
-    //     // tests inclusion in both directions to determine equality
-    //     expect(result.data).to.include([paulWR, pierreWR]);
-    //     expect([paulWR, pierreWR]).to.include(result.data);
-    // });
+    // 14
+    lab.test('get all WR (w/o id)', async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr');
+        expect(result.success).to.be.true();
+        // tests inclusion in both directions to determine equality
+        expect(result.data).to.include([paulWR, pierreWR]);
+        expect([paulWR, pierreWR]).to.include(result.data);
+    });
 
-    // // 15
-    // lab.test('delete an opened wr', async () => {
-    //     const result = await makePromiseRequest(client.del, '/api/wr/' + pierreWR.id);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data[0]).to.be.equals(pierreWR);
-    // });
+    // 15
+    lab.test('delete an opened wr', async () => {
+        const result = await makePromiseRequest(client.del, '/api/wr/' + pierreWR.id);
+        expect(result.success).to.be.true();
+        expect(result.data[0]).to.be.equals(pierreWR);
+    });
 
-    // // 16
-    // lab.test('get global stats', async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats');
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.global_stats_wr_created).to.be.equals(2);
-    //     expect(result.data.global_stats_wr_opened).to.be.equals(0);
-    //     expect(result.data.global_stats_wr_closed).to.be.equals(1);
-    // });
+    // 16
+    lab.test('get global stats', async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats');
+        expect(result.success).to.be.true();
+        expect(result.data.global_stats_wr_created).to.be.equals(2);
+        expect(result.data.global_stats_wr_opened).to.be.equals(0);
+        expect(result.data.global_stats_wr_closed).to.be.equals(1);
+    });
 
-    // // 17
-    // lab.test('get user stats for ' + pierreWR.applicant, async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats/' + pierreWR.applicant);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.applicant).to.be.equals(pierreWR.applicant);
-    //     expect(result.data.stats_wr_created).to.be.equals(1);
-    //     expect(result.data.stats_wr_opened).to.be.equals(0);
-    //     expect(result.data.stats_wr_closed).to.be.equals(0);
-    // });
+    // 17
+    lab.test('get user stats for ' + pierreWR.applicant, async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats/' + pierreWR.applicant);
+        // console.log(result);
+        expect(result.success).to.be.true();
+        expect(result.data.applicant).to.be.equals(pierreWR.applicant);
+        expect(result.data.stats_wr_created).to.be.equals(1);
+        expect(result.data.stats_wr_opened).to.be.equals(0);
+        expect(result.data.stats_wr_closed).to.be.equals(0);
+    });
 
-    // // 18
-    // lab.test('attempt to update a dummy wr', async () => {
-    //     const result = await makePromiseRequest(client.put, '/api/wr/_______', {});
-    //     expect(result.success).to.be.false();
-    //     expect(result.msg).to.be.equals('wr not found');
-    // });
+    // 18
+    lab.test('attempt to update a dummy wr', async () => {
+        const result = await makePromiseRequest(client.put, '/api/wr/_______', {});
+        expect(result.success).to.be.false();
+        expect(result.msg).to.be.equals('wr not found');
+    });
 
-    // // 19
-    // lab.test('attempt to update a wr w/o id', async () => {
-    //     const result = await makePromiseRequest(client.put, '/api/wr', {});
-    //     expect(result.success).to.be.false();
-    //     expect(result.msg).to.be.equals('wr id not provided');
-    // });
+    // 19
+    lab.test('attempt to update a wr w/o id', async () => {
+        const result = await makePromiseRequest(client.put, '/api/wr', {});
+        expect(result.success).to.be.false();
+        expect(result.msg).to.be.equals('wr id not provided');
+    });
 
-    // // 20
-    // lab.test('attempt to delete a dummy wr', async () => {
-    //     const result = await makePromiseRequest(client.del, '/api/wr/_______');
-    //     expect(result.success).to.be.false();
-    //     expect(result.msg).to.be.equals('wr not found');
-    // });
+    // 20
+    lab.test('attempt to delete a dummy wr', async () => {
+        const result = await makePromiseRequest(client.del, '/api/wr/_______');
+        expect(result.success).to.be.false();
+        expect(result.msg).to.be.equals('wr not found');
+    });
 
-    // // 21
-    // lab.test('create a wr from henri', async () => {
-    //     const result = await makePromiseRequest(client.post, '/api/wr', henriWR);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data[0]).to.include(henriWR);
-    //     // completion date doesn't exist because wr isn't closed
-    //     expect(result.data[0].compl_date).to.not.exist();
-    //     henriWR = result.data[0];
-    // });
+    // 21
+    lab.test('create a wr from henri', async () => {
+        const result = await makePromiseRequest(client.post, '/api/wr', henriWR);
+        expect(result.success).to.be.true();
+        expect(result.data[0]).to.include(henriWR);
+        // completion date doesn't exist because wr isn't closed
+        expect(result.data[0].compl_date).to.not.exist();
+        henriWR = result.data[0];
+    });
 
-    // // 22
-    // lab.test('get global stats', async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats');
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.global_stats_wr_created).to.be.equals(3);
-    //     expect(result.data.global_stats_wr_opened).to.be.equals(1);
-    //     expect(result.data.global_stats_wr_closed).to.be.equals(1);
-    // });
+    // 22
+    lab.test('get global stats', async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats');
+        expect(result.success).to.be.true();
+        expect(result.data.global_stats_wr_created).to.be.equals(3);
+        expect(result.data.global_stats_wr_opened).to.be.equals(1);
+        expect(result.data.global_stats_wr_closed).to.be.equals(1);
+    });
 
-    // // 23
-    // lab.test('get user stats for ' + henriWR.applicant, async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats/' + henriWR.applicant);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.applicant).to.be.equals(henriWR.applicant);
-    //     expect(result.data.stats_wr_created).to.be.equals(1);
-    //     expect(result.data.stats_wr_opened).to.be.equals(1);
-    //     expect(result.data.stats_wr_closed).to.be.equals(0);
-    // });
+    // 23
+    lab.test('get user stats for ' + henriWR.applicant, async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats/' + henriWR.applicant);
+        expect(result.success).to.be.true();
+        expect(result.data.applicant).to.be.equals(henriWR.applicant);
+        expect(result.data.stats_wr_created).to.be.equals(1);
+        expect(result.data.stats_wr_opened).to.be.equals(1);
+        expect(result.data.stats_wr_closed).to.be.equals(0);
+    });
 
-    // // 24
-    // lab.test('create a wr from jacques', async () => {
-    //     const result = await makePromiseRequest(client.post, '/api/wr', jacquesWR);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data[0]).to.include(jacquesWR);
-    //     // completion date doesn't exist because wr isn't closed
-    //     expect(result.data[0].compl_date).to.not.exist();
-    //     jacquesWR = result.data[0];
-    // });
+    // 24
+    lab.test('create a wr from jacques', async () => {
+        const result = await makePromiseRequest(client.post, '/api/wr', jacquesWR);
+        expect(result.success).to.be.true();
+        expect(result.data[0]).to.include(jacquesWR);
+        // completion date doesn't exist because wr isn't closed
+        expect(result.data[0].compl_date).to.not.exist();
+        jacquesWR = result.data[0];
+    });
 
-    // // 25
-    // lab.test('update state (closing)', async () => {
-    //     const result = await makePromiseRequest(client.put, '/api/wr/' + jacquesWR.id, {"state": "closed"});
-    //     expect(result.success).to.be.true();
-    //     jacquesWR.state = 'closed';
-    //     jacquesWR.compl_date = currentDate();
-    //     expect(result.data[0]).to.be.equals(jacquesWR);
-    // });
+    // 25
+    lab.test('update state (closing)', async () => {
+        const result = await makePromiseRequest(client.put, '/api/wr/' + jacquesWR.id, {"state": "closed"});
+        expect(result.success).to.be.true();
+        jacquesWR.state = 'closed';
+        jacquesWR.compl_date = currentDate();
+        expect(result.data[0]).to.be.equals(jacquesWR);
+    });
 
-    // // 26
-    // lab.test('get global stats', async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats');
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.global_stats_wr_created).to.be.equals(4);
-    //     expect(result.data.global_stats_wr_opened).to.be.equals(1);
-    //     expect(result.data.global_stats_wr_closed).to.be.equals(2);
-    // });
+    // 26
+    lab.test('get global stats', async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats');
+        expect(result.success).to.be.true();
+        expect(result.data.global_stats_wr_created).to.be.equals(4);
+        expect(result.data.global_stats_wr_opened).to.be.equals(1);
+        expect(result.data.global_stats_wr_closed).to.be.equals(2);
+    });
 
-    // // 27
-    // lab.test('get user stats for ' + jacquesWR.applicant, async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats/' + jacquesWR.applicant);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.applicant).to.be.equals(jacquesWR.applicant);
-    //     expect(result.data.stats_wr_created).to.be.equals(1);
-    //     expect(result.data.stats_wr_opened).to.be.equals(0);
-    //     expect(result.data.stats_wr_closed).to.be.equals(1);
-    // });
+    // 27
+    lab.test('get user stats for ' + jacquesWR.applicant, async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats/' + jacquesWR.applicant);
+        expect(result.success).to.be.true();
+        expect(result.data.applicant).to.be.equals(jacquesWR.applicant);
+        expect(result.data.stats_wr_created).to.be.equals(1);
+        expect(result.data.stats_wr_opened).to.be.equals(0);
+        expect(result.data.stats_wr_closed).to.be.equals(1);
+    });
 
-    // // 28
-    // // drop all work (not closed) requests
-    // lab.test('delete all wr', async () => {
-    //     const result = await makePromiseRequest(client.del, '/api/wr');
-    //     expect(result.success).to.be.true();
-    // });
+    // 28
+    // drop all work (not closed) requests
+    lab.test('delete all wr', async () => {
+        const result = await makePromiseRequest(client.del, '/api/wr');
+        expect(result.success).to.be.true();
+    });
 
-    // // 29
-    // lab.test('get all wr (w/o id)', async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr');
-    //     expect(result.success).to.be.true();
-    //     //console.log(result)
-    //     // only PaulWR and JacquesWR have not been deleted because there are closed
-    //     expect(result.data).to.include([paulWR, jacquesWR]);
-    //     expect([paulWR, jacquesWR]).to.include(result.data);
-    // });
+    // 29
+    lab.test('get all wr (w/o id)', async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr');
+        expect(result.success).to.be.true();
+        //console.log(result)
+        // only PaulWR and JacquesWR have not been deleted because there are closed
+        expect(result.data).to.include([paulWR, jacquesWR]);
+        expect([paulWR, jacquesWR]).to.include(result.data);
+    });
 
-    // // 30
-    // lab.test('get global stats after delete', async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats');
-    //         expect(result.success).to.be.true();
-    //         expect(result.data.global_stats_wr_created).to.be.equals(4);
-    //         expect(result.data.global_stats_wr_opened).to.be.equals(0);
-    //         expect(result.data.global_stats_wr_closed).to.be.equals(2);
-    // });
+    // 30
+    lab.test('get global stats after delete', async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats');
+            expect(result.success).to.be.true();
+            expect(result.data.global_stats_wr_created).to.be.equals(4);
+            expect(result.data.global_stats_wr_opened).to.be.equals(0);
+            expect(result.data.global_stats_wr_closed).to.be.equals(2);
+    });
 
-    // // 31
-    // lab.test('get user stats for ' + paulWR.applicant, async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats/' + paulWR.applicant);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.applicant).to.be.equals(paulWR.applicant);
-    //     expect(result.data.stats_wr_created).to.be.equals(1);
-    //     expect(result.data.stats_wr_opened).to.be.equals(0);
-    //     expect(result.data.stats_wr_closed).to.be.equals(1);
-    // });
+    // 31
+    lab.test('get user stats for ' + paulWR.applicant, async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats/' + paulWR.applicant);
+        expect(result.success).to.be.true();
+        expect(result.data.applicant).to.be.equals(paulWR.applicant);
+        expect(result.data.stats_wr_created).to.be.equals(1);
+        expect(result.data.stats_wr_opened).to.be.equals(0);
+        expect(result.data.stats_wr_closed).to.be.equals(1);
+    });
 
-    // // 32
-    // lab.test('get user stats for ' + pierreWR.applicant, async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats/' + pierreWR.applicant);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.applicant).to.be.equals(pierreWR.applicant);
-    //     expect(result.data.stats_wr_created).to.be.equals(1);
-    //     expect(result.data.stats_wr_opened).to.be.equals(0);
-    //     expect(result.data.stats_wr_closed).to.be.equals(0);
-    // });
+    // 32
+    lab.test('get user stats for ' + pierreWR.applicant, async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats/' + pierreWR.applicant);
+        expect(result.success).to.be.true();
+        expect(result.data.applicant).to.be.equals(pierreWR.applicant);
+        expect(result.data.stats_wr_created).to.be.equals(1);
+        expect(result.data.stats_wr_opened).to.be.equals(0);
+        expect(result.data.stats_wr_closed).to.be.equals(0);
+    });
 
-    // // 33
-    // lab.test('get user stats for ' + henriWR.applicant, async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats/' + henriWR.applicant);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.applicant).to.be.equals(henriWR.applicant);
-    //     expect(result.data.stats_wr_created).to.be.equals(1);
-    //     expect(result.data.stats_wr_opened).to.be.equals(0);
-    //     expect(result.data.stats_wr_closed).to.be.equals(0);
-    // });
+    // 33
+    lab.test('get user stats for ' + henriWR.applicant, async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats/' + henriWR.applicant);
+        expect(result.success).to.be.true();
+        expect(result.data.applicant).to.be.equals(henriWR.applicant);
+        expect(result.data.stats_wr_created).to.be.equals(1);
+        expect(result.data.stats_wr_opened).to.be.equals(0);
+        expect(result.data.stats_wr_closed).to.be.equals(0);
+    });
 
-    // // 34
-    // lab.test('get user stats for ' + jacquesWR.applicant, async () => {
-    //     const result = await makePromiseRequest(client.get, '/api/wr/stats/' + jacquesWR.applicant);
-    //     expect(result.success).to.be.true();
-    //     expect(result.data.applicant).to.be.equals(jacquesWR.applicant);
-    //     expect(result.data.stats_wr_created).to.be.equals(1);
-    //     expect(result.data.stats_wr_opened).to.be.equals(0);
-    //     expect(result.data.stats_wr_closed).to.be.equals(1);
-    // });
+    // 34
+    lab.test('get user stats for ' + jacquesWR.applicant, async () => {
+        const result = await makePromiseRequest(client.get, '/api/wr/stats/' + jacquesWR.applicant);
+        expect(result.success).to.be.true();
+        expect(result.data.applicant).to.be.equals(jacquesWR.applicant);
+        expect(result.data.stats_wr_created).to.be.equals(1);
+        expect(result.data.stats_wr_opened).to.be.equals(0);
+        expect(result.data.stats_wr_closed).to.be.equals(1);
+    });
 
 });
 

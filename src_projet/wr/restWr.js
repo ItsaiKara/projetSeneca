@@ -17,30 +17,14 @@ var Routes = [{
     create : {POST : true , name :"", suffix : "/wr"},
     getById: {GET: true, name: "", suffix: "/wr/:id?"},
     updateWr: {PUT: true, name: "", suffix: "/wr/:id?"},
+    deleteAllWr : {DELETE: true, name: "", suffix: "/wr"},
     deleteWr : {DELETE: true, name: "", suffix: "/wr/:id"},
-<<<<<<< HEAD
-    getWrStatss: { GET: true, name: '', suffix: 'wr/stats/:applicant?'}
-=======
-    stats: {GET: true, name: "", suffix: "/wr/stats"}
   }
-},
-{
-  pin: 'role:stat,cmd:*', // type de message créé à la réception d'une requête HTTP
-  prefix : '/api',
-  map: {
-    stats: {GET: true, name: "", suffix: "/wr/stats/:applicant?"}
->>>>>>> 8ebb2fc2dccbb33070b77aa7b321e83f05bb7397
-  }
-}
-]
+}]
 
 
 seneca.client({port: 4000, pin: 'role:wr'})
-<<<<<<< HEAD
 seneca.client({port: 4001, pin: 'role:stats'})
-=======
-seneca.client({port: 4001, pin: 'role:stat'})
->>>>>>> 8ebb2fc2dccbb33070b77aa7b321e83f05bb7397
 
 seneca.use(SenecaWeb, {
   options: { parseBody: false }, // désactive l'analyseur JSON de Seneca
