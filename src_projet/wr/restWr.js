@@ -4,6 +4,14 @@ const Express = require("express");
 const seneca = Seneca();
 const BodyParser = require("body-parser");
 
+
+/**
+ * Routes de l'API REST
+ * @type {Array}
+ * @property {string} pin - type de message créé à la réception d'une requête HTTP
+ * @property {string} prefix - préfixe de l'URL
+ * @property {Object} map - mappe les méthodes HTTP sur les actions
+ */
 var Routes = [
   {
     pin: "role:stats,cmd:getWrStats", // type de message créé à la réception d'une requête HTTP
@@ -32,6 +40,7 @@ var Routes = [
   },
 ];
 
+// connexion aux microservices
 seneca.client({ port: 4000, pin: "role:wr" });
 seneca.client({ port: 4001, pin: "role:stats" });
 seneca.client({ port: 4002, pin: "role:search" });

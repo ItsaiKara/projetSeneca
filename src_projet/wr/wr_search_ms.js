@@ -10,6 +10,13 @@ const { application } = require('express');
 // definition d'un plugin (constituant ici le microservice)
 var plugSearchWr = function (options) {
     var seneca = this
+    /**
+     * Lecture des données dans le fichier wr.json
+     * @role search
+     * @cmd searchAll
+     * @query search
+     * @return {Object} - résultat de la recherche + message de succès
+     */
     seneca.add('role:search,cmd:searchAll', async function (msg, done) {
         miniSearch.addAll(readWrsFromFile())
         console.log("miniSearch")

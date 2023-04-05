@@ -10,7 +10,7 @@ function readStatsFromFile() {
   return stats;
 }
 
-
+//function to read wrs from file
 function readWrsFromFile() {
   const rawData = fs.readFileSync('wrs.json');
   const wrs = JSON.parse(rawData);
@@ -37,33 +37,39 @@ function getNbWrDeletedByApplicant(applicant) {
 
 // definition d'un plugin (constituant ici le microservice)
 var plugStatWr = function (options) {
-    var seneca = this
+    var seneca = 
+	/**
+	 * @role stats
+	 * @cmd getWrStats
+	 * @param applicant optional
+	 * @return {Object} - Statistiques + message de succès
+	 * @description get stats for all wrs or for wrs from a specific applicant
+	 * */
     seneca.add('role:stats,cmd:getWrStats', async (msg, respond) => {
+		//l'applicant est optionnel
 		let l_applicant = msg.args.params.applicant
-		if (l_applicant) {
+		if (l_applicant) { // si l'applicant est renseigné, on renvoie les stats pour les wrs de cet applicant
 			let wrs = readWrsFromFile()
-			// console.log(l_applicant + "-------------------------------------------------------------")
-			//get all wrs from this applicant 
 			let wrs_from_applicant = []
+			// pour chaque wr, on vérifie si l'applicant correspond à l'applicant de la wr fait une liste des wrs de cet applicant
 			wrs.forEach(wr => {
 				if (wr.applicant == l_applicant) {
 					wrs_from_applicant.push(wr)
 				}
 			})
-			//get number of deleted wrs from this applicant
+			// le nombre de wrs supprimées par cet applicant est dans le fichier stat_del.json
 			let wrs_deleted = 0
 			
-			//stats for this applicant
+			//stats  pour cet applicant : nombre de wrs créées, nombre de wrs ouvertes, nombre de wrs fermées
+			// créer = state + closed
 			let stats = {applicant_stats_wr_created: wrs_from_applicant.length + getNbWrDeletedByApplicant(l_applicant), applicant_stats_wr_closed: 0, applicant_stats_wr_opened: 0}
-			// console.log(stats)
-			//for each wr, update stats for this applicant
+			//met a jours les stats pour les wrs de cet applicant : nombre de wrs ouvertes, nombre de wrs fermées
 			wrs_from_applicant.forEach(wr => {
 				if (wr.state == 'closed') {
 					stats.applicant_stats_wr_closed++
 				} else {
 					stats.applicant_stats_wr_opened++
 				}
-				// console.log(stats)
 			})
 			await respond(null, result = { 
 				data:  { 
